@@ -5,7 +5,7 @@
     "jest": "^29.7.0"
   },
   "scripts": {
-    "test": "jest --verbose"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --verbose"
   },
   "presets": [
     "@babel/preset-env"
