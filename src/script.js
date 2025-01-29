@@ -225,11 +225,6 @@ function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
   return false;
 }
 
-// Vincula a função de verificação ao botão da interface
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("button").addEventListener("click", verificarGrafo);
-});
-
 // Função para verificar se o grafo é bipartido
 function verificarBipartido(grafo) {
   const color = {}; // Objeto que armazena as cores atribuídas aos vértices
@@ -272,3 +267,8 @@ function buscaProfundidadeBipartido(grafo, nodo, color, c) {
 
   return true; // Se todos os vizinhos foram coloridos corretamente, retorna verdadeiro
 }
+
+// Vincula a função de verificação ao botão da interface
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector("button").addEventListener("click", verificarGrafo);
+});
