@@ -1,25 +1,25 @@
 // Função principal para verificar propriedades do grafo
 export function verificarGrafo() {
-  // Obtem as arestas do grafo A e, opcionalmente, do grafo B
+  // Obtém a entrada de arestas fornecida pelo usuário no campo de texto
   const entradaArestas = document.getElementById("arestas").value;
 
-  // Converte as arestas da entrada de texto para formato de array
+  // Converte a entrada de texto para um array de arestas
   const arestas = processarArestas(entradaArestas);
 
-  // Obtem elementos da interface para exibir os resultados
+  // Obtém os elementos da interface onde os resultados serão exibidos
   const resultado = document.getElementById("detalhesResultado");
   const listaResultados = document.getElementById("listaResultados");
   const visualizacaoGrafo = document.getElementById("visualizacaoGrafo");
 
-  // Limpa os resultados anteriores
+  // Limpa os resultados anteriores, removendo todos os elementos filhos da lista
   while (listaResultados.firstChild) {
     listaResultados.removeChild(listaResultados.firstChild);
   }
 
-  // Limpa o canvas do grafo
+  // Limpa o canvas onde o grafo será visualizado
   visualizacaoGrafo.innerHTML = "";
 
-  // Caso a entrada de arestas seja inválida, exibe mensagem de erro
+  // Caso a entrada de arestas seja inválida, exibe uma mensagem de erro e retorna
   if (!arestas) {
     const erro = document.createElement("li");
     erro.classList.add("erro");
@@ -30,58 +30,60 @@ export function verificarGrafo() {
     return;
   }
 
-  // Cria o grafo a partir das arestas fornecidas
+  // Cria o grafo como um objeto a partir das arestas fornecidas
   const grafo = criarGrafo(arestas);
 
-  // Calcula propriedades do grafo
+  // Calcula o número de componentes conexos do grafo
   const componentesConexos = contarComponentesConexos(grafo);
 
-  // Gera detalhes para exibição
+  // Verifica se o grafo contém ciclos
+  const contemCiclo = verificarCiclo(grafo);
+
+  // Cria os detalhes das propriedades do grafo para exibição
   let detalhes = [
     `Arestas fornecidas: ${JSON.stringify(arestas)}`,
-
     `--------------------------------------------------------------------------------------------`,
-
     `Quantidade de componentes conexos: ${componentesConexos}`,
-
     verificarCompleto(grafo)
       ? "O grafo é completo."
       : "O grafo não é completo.",
-
     `--------------------------------------------------------------------------------------------`,
-
-    verificarCiclo ? "O grafo contém ciclo." : "O grafo não contém ciclo.",
+    contemCiclo ? "O grafo contém ciclo." : "O grafo não contém ciclo.",
   ];
 
-  // Exibe os detalhes na interface
+  // Exibe os detalhes na interface como uma lista de elementos HTML
   detalhes.forEach((detalhe) => {
     const item = document.createElement("li");
     item.textContent = detalhe;
     listaResultados.appendChild(item);
   });
 
-  // Exibe o painel de resultados
+  // Torna o painel de resultados visível
   resultado.style.display = "block";
 
-  // Visualiza o grafo com a biblioteca Vis.js
+  // Visualiza o grafo utilizando a biblioteca Vis.js
   const nodes = new vis.DataSet();
   const arestasVis = new vis.DataSet();
 
   const vertices = new Set();
 
+  // Extrai todos os vértices do grafo a partir das arestas
   arestas.forEach(([v1, v2]) => {
     vertices.add(v1);
     vertices.add(v2);
   });
 
+  // Adiciona cada vértice como um nó na visualização
   vertices.forEach((vertex) => {
     nodes.add({ id: vertex, label: String(vertex) });
   });
 
+  // Adiciona as arestas à visualização do grafo
   arestas.forEach(([v1, v2]) => {
     arestasVis.add({ from: v1, to: v2 });
   });
 
+  // Configurações da visualização do grafo
   const container = visualizacaoGrafo;
   const data = { nodes: nodes, edges: arestasVis };
   const options = {
@@ -92,13 +94,15 @@ export function verificarGrafo() {
     },
   };
 
+  // Cria e exibe o grafo com Vis.js
   new vis.Network(container, data, options);
 }
 
-// Função para converter a entrada de texto em arestas
+// Função para converter a entrada de texto em um array de arestas
 export function processarArestas(input) {
   try {
-    const analisado = JSON.parse(input); // Tenta converter a string em um objeto JSON
+    // Tenta converter a entrada para um array JSON
+    const analisado = JSON.parse(input);
 
     // Verifica se o input é um array de pares de números inteiros
     if (
@@ -110,137 +114,114 @@ export function processarArestas(input) {
           aresta.every((nodo) => Number.isInteger(nodo))
       )
     ) {
-      return analisado;
+      return analisado; // Retorna o array de arestas se for válido
     }
 
     return null; // Retorna null para entradas inválidas
   } catch (e) {
-    return null; // Retorna null para entradas não parseáveis
+    return null; // Retorna null se houver erro ao analisar o JSON
   }
 }
 
-// Função para criar o grafo a partir das arestas fornecidas
+// Função para criar um grafo como objeto a partir das arestas fornecidas
 export function criarGrafo(arestas) {
-  const grafo = {}; // Cria um objeto vazio para representar o grafo
+  const grafo = {}; // Objeto vazio para representar o grafo
 
-  // Itera sobre as arestas e adiciona cada uma ao grafo
+  // Adiciona cada aresta ao grafo
   arestas.forEach(([u, v]) => {
-    // Se o nó não existe, adiciona-o ao grafo
     if (!grafo[u]) grafo[u] = [];
     if (!grafo[v]) grafo[v] = [];
 
-    // Adiciona a aresta apenas se não existir
+    // Evita adicionar arestas duplicadas
     if (!grafo[u].includes(v)) grafo[u].push(v);
-    if (!grafo[v].includes(u)) grafo[v].push(u); // Grafo não direcionado (-->)
+    if (!grafo[v].includes(u)) grafo[v].push(u); // Grafo não direcionado
   });
 
   return grafo;
 }
 
-// Função para contar o número de componentes conexos no grafo
+// Função para contar o número de componentes conexos do grafo
 export function contarComponentesConexos(grafo) {
-  const visitado = new Set(); // Cria um conjunto para armazenar os nodos visitados
-
-  let componentesConexos = 0; // Inicializa o contador de componentes conexos
+  const visitado = new Set(); // Conjunto para armazenar os vértices visitados
+  let componentesConexos = 0; // Contador de componentes conexos
 
   for (const nodo in grafo) {
-    // Verifica se o nodo já foi visitado e, se não, realiza busca por profundidade
     if (!visitado.has(Number(nodo))) {
-      buscaProfundidade(grafo, Number(nodo), visitado); // Realiza busca por profundidade para marcar todos os nodos conectados
-      componentesConexos++; // Incrementa o contador de componentes conexos
+      buscaProfundidade(grafo, Number(nodo), visitado); // Marca todos os vértices conectados
+      componentesConexos++; // Incrementa o número de componentes conexos
     }
   }
   return componentesConexos;
 }
 
-// Função auxiliar para realizar busca por profundidade
+// Função auxiliar para realizar busca em profundidade (DFS)
 function buscaProfundidade(grafo, nodo, visitado) {
-  if (!grafo[nodo]) {
-    return; // Se o nó não estiver no grafo, retorna
-  }
+  if (!grafo[nodo]) return; // Se o nó não estiver no grafo, retorna
 
   visitado.add(nodo); // Marca o nó como visitado
 
+  // Visita recursivamente os vizinhos que ainda não foram visitados
   grafo[nodo].forEach((v) => {
-    // Verifica se o vizinho não foi visitado e, se não, realiza busca por profundidade
     if (!visitado.has(v)) {
-      buscaProfundidade(grafo, v, visitado); // Realiza busca por profundidade para marcar todos os nodos conectados
+      buscaProfundidade(grafo, v, visitado);
     }
   });
 }
 
 // Função para verificar se o grafo é completo
 export function verificarCompleto(grafo) {
-  const vertices = Object.keys(grafo); // Obtem os nodos do grafo
-
-  const n = vertices.length; // Obtem o número de nodos do grafo
+  const vertices = Object.keys(grafo); // Obtém os vértices do grafo
+  const n = vertices.length; // Número de vértices no grafo
 
   // Verifica se cada vértice está conectado a todos os outros
   for (const vertice of vertices) {
     if (grafo[vertice].length !== n - 1) {
-      return false; // Se algum vértice não estiver conectado a todos os outros, não é completo
+      return false; // Se algum vértice não estiver conectado a todos, não é completo
     }
   }
   return true;
 }
 
-// Função para verificar a presença de um ciclo
+// Função para verificar se o grafo contém ciclos
 function verificarCiclo(grafo) {
-  const visitado = new Set(); // Cria um conjunto para armazenar os nodos visitados
+  const visitado = new Set();
+  const recursaoVisitada = new Set();
 
-  const recursaoVisitada = new Set(); // Cria um conjunto para armazenar os nodos visitados na recursão
-
-  // Itera sobre os nodos do grafo e verifica se há ciclos
+  // Percorre todos os vértices e verifica se há ciclos
   for (const nodo in grafo) {
     if (!visitado.has(Number(nodo))) {
       if (
-        // Utiliza a função auxiliar para detectar ciclos
         detectarCiclo(grafo, Number(nodo), visitado, recursaoVisitada, null)
       ) {
-        return true; // Se encontrar um ciclo, retorna true
+        return true; // Se um ciclo for encontrado, retorna true
       }
     }
   }
-
-  return false; // Se não encontrar nenhum ciclo
+  return false;
 }
 
 // Função auxiliar para detectar ciclos usando busca em profundidade (DFS)
 function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
-  // Verifica se o nó não está no grafo (ou seja, não tem vizinhos)
-  if (!grafo[nodo]) {
-    return false; // Se o nó não estiver no grafo, não pode fazer parte de um ciclo
-  }
+  if (!grafo[nodo]) return false;
 
-  // Marca o nó como visitado para evitar verificações repetidas
   visitado.add(nodo);
-
-  // Adiciona o nó ao conjunto de nós da recursão atual
   recursaoVisitada.add(nodo);
 
-  // Itera sobre os vizinhos (arestas) do nó atual
   for (const vizinho of grafo[nodo]) {
-    // Se o vizinho ainda não foi visitado, faz uma chamada recursiva (DFS)
     if (!visitado.has(vizinho)) {
-      // Se algum vizinho retornar true, significa que há um ciclo
       if (detectarCiclo(grafo, vizinho, visitado, recursaoVisitada, nodo)) {
-        return true; // Ciclo encontrado, retorna true imediatamente
+        return true;
       }
-    }
-    // Se o vizinho já foi visitado e não for o pai direto do nó atual, há um ciclo
-    else if (vizinho !== pai && recursaoVisitada.has(vizinho)) {
-      return true; // O nó está na pilha de recursão, então há um ciclo
+    } else if (vizinho !== pai && recursaoVisitada.has(vizinho)) {
+      return true;
     }
   }
 
-  // Remove o nó do conjunto de nós da recursão, pois a DFS dele terminou
   recursaoVisitada.delete(nodo);
-
-  // Se nenhum ciclo foi encontrado, retorna false
   return false;
 }
 
-// Vincular a função de verificação ao evento de clique do botão
+// Vincula a função de verificação ao botão da interface
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("button").addEventListener("click", verificarGrafo);
 });
