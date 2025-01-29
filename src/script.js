@@ -86,3 +86,10 @@ function verificarCompleto(grafo) {
   }
   return true;
 }
+
+module.exports = {
+  processarArestas,
+  criarGrafo,
+  contarComponentesConexos,
+  verificarCompleto,
+};
