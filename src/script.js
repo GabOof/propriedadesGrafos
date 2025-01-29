@@ -32,9 +32,9 @@ function criarGrafo(arestas) {
     if (!grafo[u]) grafo[u] = [];
     if (!grafo[v]) grafo[v] = [];
 
-    // Adiciona a aresta ao grafo
-    grafo[u].push(v);
-    grafo[v].push(u); // Grafo não direcionado (-->)
+    // Adiciona a aresta apenas se não existir
+    if (!grafo[u].includes(v)) grafo[u].push(v);
+    if (!grafo[v].includes(u)) grafo[v].push(u); // Grafo não direcionado (-->)
   });
 
   return grafo;
@@ -74,14 +74,14 @@ function buscaProfundidade(grafo, nodo, visitado) {
 
 // Função para verificar se o grafo é completo
 function verificarCompleto(grafo) {
-  const vertices = Object.keys(grafo); // Obtem os nodos do grafo
+  const vertices = Object.keys(grafo);
+  const n = vertices.length;
+  console.log(grafo); // Verifique como o grafo está sendo gerado
 
-  const n = vertices.length; // Obtem o número de nodos do grafo
-
-  // Verifica se cada vértice está conectado a todos os outros
   for (const vertice of vertices) {
     if (grafo[vertice].length !== n - 1) {
-      return false; // Se algum vértice não estiver conectado a todos os outros, não é completo
+      console.log(`Grafo incompleto no vértice ${vertice}`); // Ajuda a identificar onde falha
+      return false;
     }
   }
   return true;
