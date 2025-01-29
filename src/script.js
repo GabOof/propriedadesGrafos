@@ -1,5 +1,5 @@
 // Função principal para verificar propriedades do grafo
-export function verificarGrafo() {
+function verificarGrafo() {
   // Obtém a entrada de arestas fornecida pelo usuário no campo de texto
   const entradaArestas = document.getElementById("arestas").value;
 
@@ -103,7 +103,7 @@ export function verificarGrafo() {
 }
 
 // Função para converter a entrada de texto em um array de arestas
-export function processarArestas(input) {
+module.exports.processarArestas = function processarArestas(input) {
   try {
     // Tenta converter a entrada para um array JSON
     const analisado = JSON.parse(input);
@@ -125,10 +125,10 @@ export function processarArestas(input) {
   } catch (e) {
     return null; // Retorna null se houver erro ao analisar o JSON
   }
-}
+};
 
 // Função para criar um grafo como objeto a partir das arestas fornecidas
-export function criarGrafo(arestas) {
+module.exports.criarGrafo = function criarGrafo(arestas) {
   const grafo = {}; // Objeto vazio para representar o grafo
 
   // Adiciona cada aresta ao grafo
@@ -142,10 +142,12 @@ export function criarGrafo(arestas) {
   });
 
   return grafo;
-}
+};
 
 // Função para contar o número de componentes conexos do grafo
-export function contarComponentesConexos(grafo) {
+module.exports.contarComponentesConexos = function contarComponentesConexos(
+  grafo
+) {
   const visitado = new Set(); // Conjunto para armazenar os vértices visitados
   let componentesConexos = 0; // Contador de componentes conexos
 
@@ -156,7 +158,7 @@ export function contarComponentesConexos(grafo) {
     }
   }
   return componentesConexos;
-}
+};
 
 // Função auxiliar para realizar busca em profundidade (DFS)
 function buscaProfundidade(grafo, nodo, visitado) {
@@ -173,7 +175,7 @@ function buscaProfundidade(grafo, nodo, visitado) {
 }
 
 // Função para verificar se o grafo é completo
-export function verificarCompleto(grafo) {
+module.exports.verificarCompleto = function verificarCompleto(grafo) {
   const vertices = Object.keys(grafo); // Obtém os vértices do grafo
   const n = vertices.length; // Número de vértices no grafo
 
@@ -184,10 +186,10 @@ export function verificarCompleto(grafo) {
     }
   }
   return true;
-}
+};
 
 // Função para verificar se o grafo contém ciclos
-function verificarCiclo(grafo) {
+module.exports.verificarCiclo = function verificarCiclo(grafo) {
   const visitado = new Set();
   const recursaoVisitada = new Set();
 
@@ -202,7 +204,7 @@ function verificarCiclo(grafo) {
     }
   }
   return false;
-}
+};
 
 // Função auxiliar para detectar ciclos usando busca em profundidade (DFS)
 function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
@@ -226,7 +228,7 @@ function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
 }
 
 // Função para verificar se o grafo é bipartido
-function verificarBipartido(grafo) {
+module.exports.verificarBipartido = function verificarBipartido(grafo) {
   const color = {}; // Objeto que armazena as cores atribuídas aos vértices
 
   // Percorre todos os nós do grafo para garantir que todos os componentes sejam verificados
@@ -240,7 +242,7 @@ function verificarBipartido(grafo) {
     }
   }
   return true; // Se todos os componentes puderem ser coloridos corretamente, o grafo é bipartido
-}
+};
 
 // Função auxiliar para realizar a busca em profundidade (DFS) e tentar bipartir o grafo
 function buscaProfundidadeBipartido(grafo, nodo, color, c) {
@@ -269,6 +271,8 @@ function buscaProfundidadeBipartido(grafo, nodo, color, c) {
 }
 
 // Vincula a função de verificação ao botão da interface
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("button").addEventListener("click", verificarGrafo);
-});
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("button").addEventListener("click", verificarGrafo);
+  });
+}
