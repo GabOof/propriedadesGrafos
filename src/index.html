@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verificação de Propriedades de Grafos</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vis-network@9.0.4/dist/vis-network.min.js"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Verifique as Propriedades do Seu Grafo</h1>
+      <p>
+        Insira as arestas do grafo no formato [[1, 2], [2, 3], ...] e clique no
+        botão para analisar.
+      </p>
+
+      <input type="text" id="arestas" placeholder="Arestas do Grafo" />
+
+      <button onclick="verificarGrafo()">Verificar Grafo</button>
+
+      <div class="resultados-e-grafo">
+        <div id="detalhesResultado" class="resultados">
+          <h2>Resultados da Análise</h2>
+          <ul id="listaResultados">
+            <!-- Resultados serão preenchidos aqui -->
+          </ul>
+        </div>
+        <div id="visualizacaoGrafo" class="grafo">
+          <!-- O grafo será renderizado aqui -->
+        </div>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
