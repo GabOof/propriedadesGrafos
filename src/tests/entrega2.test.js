@@ -1,6 +1,6 @@
-const { verificarCiclo, verificarBipartido } = require("../script"); // Importa as funções do arquivo principal
+import { verificarCiclo, verificarBipartido } from "../script"; // Importa as funções do arquivo principal
 
-describe("Função de Grafo -> Entrega 2", () => {
+describe("Funções de Grafo -> Entrega 2", () => {
   describe("Testes para detecção de ciclos", () => {
     test("Grafo sem ciclos deve retornar false", () => {
       const grafoSemCiclo = {

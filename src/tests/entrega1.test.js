@@ -1,11 +1,11 @@
-const {
+import {
   processarArestas,
   criarGrafo,
   contarComponentesConexos,
   verificarCompleto,
-} = require("../script");
+} from "../script";
 
-describe("Funções de Grafo", () => {
+describe("Funções de Grafo -> Entrega 1", () => {
   describe("processarArestas", () => {
     it("deve processar uma entrada válida de arestas", () => {
       const input = "[ [1, 2], [2, 3], [3, 4] ]";
