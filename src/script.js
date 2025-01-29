@@ -103,7 +103,7 @@ function verificarGrafo() {
 }
 
 // Função para converter a entrada de texto em um array de arestas
-module.exports.processarArestas = function processarArestas(input) {
+export function processarArestas(input) {
   try {
     // Tenta converter a entrada para um array JSON
     const analisado = JSON.parse(input);
@@ -125,10 +125,10 @@ module.exports.processarArestas = function processarArestas(input) {
   } catch (e) {
     return null; // Retorna null se houver erro ao analisar o JSON
   }
-};
+}
 
 // Função para criar um grafo como objeto a partir das arestas fornecidas
-module.exports.criarGrafo = function criarGrafo(arestas) {
+export function criarGrafo(arestas) {
   const grafo = {}; // Objeto vazio para representar o grafo
 
   // Adiciona cada aresta ao grafo
@@ -142,10 +142,10 @@ module.exports.criarGrafo = function criarGrafo(arestas) {
   });
 
   return grafo;
-};
+}
 
 // Função para contar o número de componentes conexos do grafo
-module.exports.contarComponentesConexos = function contarComponentesConexos(
+export function contarComponentesConexos(
   grafo
 ) {
   const visitado = new Set(); // Conjunto para armazenar os vértices visitados
@@ -158,7 +158,7 @@ module.exports.contarComponentesConexos = function contarComponentesConexos(
     }
   }
   return componentesConexos;
-};
+}
 
 // Função auxiliar para realizar busca em profundidade (DFS)
 function buscaProfundidade(grafo, nodo, visitado) {
@@ -175,7 +175,7 @@ function buscaProfundidade(grafo, nodo, visitado) {
 }
 
 // Função para verificar se o grafo é completo
-module.exports.verificarCompleto = function verificarCompleto(grafo) {
+export function verificarCompleto(grafo) {
   const vertices = Object.keys(grafo); // Obtém os vértices do grafo
   const n = vertices.length; // Número de vértices no grafo
 
@@ -186,10 +186,10 @@ module.exports.verificarCompleto = function verificarCompleto(grafo) {
     }
   }
   return true;
-};
+}
 
 // Função para verificar se o grafo contém ciclos
-module.exports.verificarCiclo = function verificarCiclo(grafo) {
+export function verificarCiclo(grafo) {
   const visitado = new Set();
   const recursaoVisitada = new Set();
 
@@ -204,7 +204,7 @@ module.exports.verificarCiclo = function verificarCiclo(grafo) {
     }
   }
   return false;
-};
+}
 
 // Função auxiliar para detectar ciclos usando busca em profundidade (DFS)
 function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
@@ -228,7 +228,7 @@ function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
 }
 
 // Função para verificar se o grafo é bipartido
-module.exports.verificarBipartido = function verificarBipartido(grafo) {
+export function verificarBipartido(grafo) {
   const color = {}; // Objeto que armazena as cores atribuídas aos vértices
 
   // Percorre todos os nós do grafo para garantir que todos os componentes sejam verificados
@@ -242,7 +242,7 @@ module.exports.verificarBipartido = function verificarBipartido(grafo) {
     }
   }
   return true; // Se todos os componentes puderem ser coloridos corretamente, o grafo é bipartido
-};
+}
 
 // Função auxiliar para realizar a busca em profundidade (DFS) e tentar bipartir o grafo
 function buscaProfundidadeBipartido(grafo, nodo, color, c) {
