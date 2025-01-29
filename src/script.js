@@ -49,6 +49,10 @@ export function verificarGrafo() {
       : "O grafo não é completo.",
     `--------------------------------------------------------------------------------------------`,
     contemCiclo ? "O grafo contém ciclo." : "O grafo não contém ciclo.",
+    verificarBipartido(grafo)
+      ? "O grafo é bipartido."
+      : "O grafo não é bipartido.",
+    `--------------------------------------------------------------------------------------------`,
   ];
 
   // Exibe os detalhes na interface como uma lista de elementos HTML
@@ -225,3 +229,46 @@ function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("button").addEventListener("click", verificarGrafo);
 });
+
+// Função para verificar se o grafo é bipartido
+function verificarBipartido(grafo) {
+  const color = {}; // Objeto que armazena as cores atribuídas aos vértices
+
+  // Percorre todos os nós do grafo para garantir que todos os componentes sejam verificados
+  for (const nodo in grafo) {
+    // Se o nó ainda não foi colorido, inicia a coloração a partir dele
+    if (!(nodo in color)) {
+      // Se não for possível colorir de maneira bipartida, retorna false
+      if (!buscaProfundidadeBipartido(grafo, nodo, color, 0)) {
+        return false;
+      }
+    }
+  }
+  return true; // Se todos os componentes puderem ser coloridos corretamente, o grafo é bipartido
+}
+
+// Função auxiliar para realizar a busca em profundidade (DFS) e tentar bipartir o grafo
+function buscaProfundidadeBipartido(grafo, nodo, color, c) {
+  // Se o nó não existir no grafo (não tem vizinhos), consideramos que ele não gera conflito
+  if (!(nodo in grafo)) {
+    return true;
+  }
+
+  // Se o nó já foi colorido, verifica se a cor atribuída é a esperada
+  if (nodo in color) {
+    return color[nodo] === c; // Retorna verdadeiro se a cor estiver correta, falso caso contrário
+  }
+
+  // Atribui a cor atual ao nó
+  color[nodo] = c;
+
+  // Itera sobre os vizinhos do nó
+  for (const vizinho of grafo[nodo]) {
+    // Faz uma chamada recursiva para tentar colorir os vizinhos com a cor oposta (1 - c)
+    if (!buscaProfundidadeBipartido(grafo, vizinho, color, 1 - c)) {
+      return false; // Se houver um conflito de cores, o grafo não pode ser bipartido
+    }
+  }
+
+  return true; // Se todos os vizinhos foram coloridos corretamente, retorna verdadeiro
+}
