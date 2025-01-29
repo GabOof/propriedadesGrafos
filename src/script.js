@@ -40,11 +40,17 @@ export function verificarGrafo() {
   let detalhes = [
     `Arestas fornecidas: ${JSON.stringify(arestas)}`,
 
+    `--------------------------------------------------------------------------------------------`,
+
     `Quantidade de componentes conexos: ${componentesConexos}`,
 
     verificarCompleto(grafo)
       ? "O grafo é completo."
       : "O grafo não é completo.",
+
+    `--------------------------------------------------------------------------------------------`,
+
+    verificarCiclo ? "O grafo contém ciclo." : "O grafo não contém ciclo.",
   ];
 
   // Exibe os detalhes na interface
@@ -176,6 +182,62 @@ export function verificarCompleto(grafo) {
     }
   }
   return true;
+}
+
+// Função para verificar a presença de um ciclo
+function verificarCiclo(grafo) {
+  const visitado = new Set(); // Cria um conjunto para armazenar os nodos visitados
+
+  const recursaoVisitada = new Set(); // Cria um conjunto para armazenar os nodos visitados na recursão
+
+  // Itera sobre os nodos do grafo e verifica se há ciclos
+  for (const nodo in grafo) {
+    if (!visitado.has(Number(nodo))) {
+      if (
+        // Utiliza a função auxiliar para detectar ciclos
+        detectarCiclo(grafo, Number(nodo), visitado, recursaoVisitada, null)
+      ) {
+        return true; // Se encontrar um ciclo, retorna true
+      }
+    }
+  }
+
+  return false; // Se não encontrar nenhum ciclo
+}
+
+// Função auxiliar para detectar ciclos usando busca em profundidade (DFS)
+function detectarCiclo(grafo, nodo, visitado, recursaoVisitada, pai) {
+  // Verifica se o nó não está no grafo (ou seja, não tem vizinhos)
+  if (!grafo[nodo]) {
+    return false; // Se o nó não estiver no grafo, não pode fazer parte de um ciclo
+  }
+
+  // Marca o nó como visitado para evitar verificações repetidas
+  visitado.add(nodo);
+
+  // Adiciona o nó ao conjunto de nós da recursão atual
+  recursaoVisitada.add(nodo);
+
+  // Itera sobre os vizinhos (arestas) do nó atual
+  for (const vizinho of grafo[nodo]) {
+    // Se o vizinho ainda não foi visitado, faz uma chamada recursiva (DFS)
+    if (!visitado.has(vizinho)) {
+      // Se algum vizinho retornar true, significa que há um ciclo
+      if (detectarCiclo(grafo, vizinho, visitado, recursaoVisitada, nodo)) {
+        return true; // Ciclo encontrado, retorna true imediatamente
+      }
+    }
+    // Se o vizinho já foi visitado e não for o pai direto do nó atual, há um ciclo
+    else if (vizinho !== pai && recursaoVisitada.has(vizinho)) {
+      return true; // O nó está na pilha de recursão, então há um ciclo
+    }
+  }
+
+  // Remove o nó do conjunto de nós da recursão, pois a DFS dele terminou
+  recursaoVisitada.delete(nodo);
+
+  // Se nenhum ciclo foi encontrado, retorna false
+  return false;
 }
 
 // Vincular a função de verificação ao evento de clique do botão
