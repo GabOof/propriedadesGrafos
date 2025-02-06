@@ -198,42 +198,41 @@ export function verificarCompleto(grafo) {
   return true;
 }
 
-// Função para verificar se o grafo é um grafo ciclo
-function verificarGrafoCiclo(grafo) {
-  const vertices = Object.keys(grafo).length; // Conta o número de vértices no grafo
+// Função para verificar se o grafo contém ciclos (gerais, incluindo ciclos isolados)
+export function verificarGrafoCiclo(grafo) {
+  const visitado = new Set(); // Conjunto para armazenar os vértices visitados
 
-  // Verifica se todos os vértices têm grau 2
+  // Função auxiliar para verificar ciclos usando a busca em profundidade (DFS)
+  function buscaCiclo(grafo, nodo, visitado, anterior) {
+    visitado.add(nodo); // Marca o vértice atual como visitado
+
+    // Itera sobre todos os vizinhos do vértice atual
+    for (const vizinho of grafo[nodo]) {
+      // Verifica se o vizinho é o vértice anterior (para evitar retroceder no caminho)
+      if (vizinho !== anterior) {
+        if (visitado.has(vizinho)) {
+          return true; // Se o vizinho já foi visitado, um ciclo foi encontrado
+        }
+        // Caso contrário, continua a busca recursiva
+        if (buscaCiclo(grafo, vizinho, visitado, nodo)) {
+          return true;
+        }
+      }
+    }
+
+    return false; // Se nenhum ciclo for encontrado, retorna false
+  }
+
+  // Verifica se algum componente do grafo contém ciclo
   for (const nodo in grafo) {
-    if (grafo[nodo].length !== 2) {
-      return false; // Se algum vértice não tiver grau 2, o grafo não é um ciclo
+    if (!visitado.has(Number(nodo))) {
+      if (buscaCiclo(grafo, Number(nodo), visitado, -1)) {
+        return true; // Se qualquer componente contém ciclo, retorna verdadeiro
+      }
     }
   }
 
-  // Verifica se o grafo é conectado
-  if (contarComponentesConexos(grafo) !== 1) {
-    return false; // Se o grafo não for conectado, ele não é um ciclo
-  }
-
-  // Verifica se o número de arestas é igual ao número de vértices
-  const numeroDeArestas = contarArestas(grafo);
-  if (numeroDeArestas !== vertices) {
-    return false; // Se o número de arestas for diferente do número de vértices, o grafo não é um ciclo
-  }
-
-  return true; // Se todas as condições forem atendidas, o grafo é um ciclo
-}
-
-// Função para contar o número de arestas no grafo
-function contarArestas(grafo) {
-  let totalArestas = 0; // Inicializa o contador de arestas
-
-  // Soma os graus de todos os vértices
-  for (const nodo in grafo) {
-    totalArestas += grafo[nodo].length;
-  }
-
-  // Cada aresta é contada duas vezes (ida e volta), então dividimos por 2
-  return totalArestas / 2; // Retorna o número total de arestas
+  return false; // Se nenhum ciclo foi encontrado
 }
 
 // Função para verificar se o grafo é bipartido
@@ -280,7 +279,7 @@ function buscaProfundidadeBipartido(grafo, nodo, color, c) {
 }
 
 // Função para verificar se existe um caminho fechado no grafo
-function verificarCaminhoFechado(grafo) {
+export function verificarCaminhoFechado(grafo) {
   const visitado = new Set(); // Conjunto para armazenar os vértices visitados
 
   // Itera sobre todos os vértices do grafo
@@ -318,7 +317,7 @@ function buscaCiclo(grafo, nodo, visitado, anterior) {
 }
 
 // Função para verificar se o grafo é Euleriano
-function verificarEuleriano(grafo) {
+export function verificarEuleriano(grafo) {
   const vertices = Object.keys(grafo); // Obtém todos os vértices do grafo
 
   // Verifica se todos os vértices têm grau par
