@@ -58,8 +58,12 @@ function verificarGrafo() {
     `--------------------------------------------------------------------------------------------`,
 
     contemCaminhoFechado
-      ? "O grafo contém um caminho fechado."
+      ? "O grafo contém caminho fechado."
       : "O grafo não contém caminho fechado.",
+
+    verificarEuleriano(grafo)
+      ? "O grafo é Euleriano."
+      : "O grafo não é Euleriano.",
     `--------------------------------------------------------------------------------------------`,
   ];
 
@@ -311,6 +315,27 @@ function buscaCiclo(grafo, nodo, visitado, anterior) {
   }
 
   return false; // Se nenhum ciclo for encontrado, retorna false
+}
+
+// Função para verificar se o grafo é Euleriano
+function verificarEuleriano(grafo) {
+  const vertices = Object.keys(grafo); // Obtém todos os vértices do grafo
+
+  // Verifica se todos os vértices têm grau par
+  for (const vertice of vertices) {
+    if (grafo[vertice].length % 2 !== 0) {
+      return false; // Se algum vértice tiver grau ímpar, não é Euleriano
+    }
+  }
+
+  // Verifica se o grafo é conexo
+  // Um grafo com grau par em todos os vértices e não conexo não pode ter um circuito Euleriano
+  const componentesConexos = contarComponentesConexos(grafo);
+  if (componentesConexos !== 1) {
+    return false; // Se o grafo não for conexo, não tem circuito Euleriano
+  }
+
+  return true; // Se todas as condições forem atendidas, o grafo é Euleriano
 }
 
 // Vincula a função de verificação ao botão da interface
