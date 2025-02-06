@@ -1,4 +1,4 @@
-import { verificarCiclo, verificarBipartido } from "../script"; // Importa as funções do arquivo principal
+import { verificarGrafoCiclo, verificarBipartido } from "../script";
 
 describe("Funções de Grafo -> Entrega 2", () => {
   describe("Testes para detecção de ciclos", () => {
@@ -9,7 +9,7 @@ describe("Funções de Grafo -> Entrega 2", () => {
         3: [2, 4],
         4: [3],
       };
-      expect(verificarCiclo(grafoSemCiclo)).toBe(false);
+      expect(verificarGrafoCiclo(grafoSemCiclo)).toBe(false);
     });
 
     test("Grafo com ciclo deve retornar true", () => {
@@ -19,7 +19,7 @@ describe("Funções de Grafo -> Entrega 2", () => {
         3: [1, 4],
         4: [2, 3],
       };
-      expect(verificarCiclo(grafoComCiclo)).toBe(true);
+      expect(verificarGrafoCiclo(grafoComCiclo)).toBe(true);
     });
 
     test("Grafo desconexo sem ciclo deve retornar false", () => {
@@ -29,15 +29,30 @@ describe("Funções de Grafo -> Entrega 2", () => {
         3: [4],
         4: [3],
       };
-      expect(verificarCiclo(grafoDesconexo)).toBe(false);
+      expect(verificarGrafoCiclo(grafoDesconexo)).toBe(false);
     });
 
     test("Grafo com laço (ciclo de um nó para ele mesmo) deve retornar true", () => {
       const grafoComLaco = {
         1: [2],
-        2: [1, 2], // Laço aqui
+        2: [1, 2],
       };
-      expect(verificarCiclo(grafoComLaco)).toBe(true);
+      expect(verificarGrafoCiclo(grafoComLaco)).toBe(true);
+    });
+
+    test("Grafo com múltiplos ciclos isolados deve retornar true", () => {
+      const grafoComCiclosIsolados = {
+        1: [2, 3],
+        2: [1, 3],
+        3: [1, 2],
+        4: [5, 6],
+        5: [4, 6],
+        6: [4, 5],
+        7: [8, 9],
+        8: [7, 9],
+        9: [7, 8],
+      };
+      expect(verificarGrafoCiclo(grafoComCiclosIsolados)).toBe(true);
     });
   });
 
