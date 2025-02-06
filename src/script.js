@@ -39,6 +39,9 @@ function verificarGrafo() {
   // Verifica se o grafo contém ciclos
   const contemCiclo = verificarGrafoCiclo(grafo);
 
+  // Verifica se o grafo contém um caminho fechado
+  const contemCaminhoFechado = verificarCaminhoFechado(grafo);
+
   // Cria os detalhes das propriedades do grafo para exibição
   let detalhes = [
     `Arestas fornecidas: ${JSON.stringify(arestas)}`,
@@ -52,6 +55,11 @@ function verificarGrafo() {
     verificarBipartido(grafo)
       ? "O grafo é bipartido."
       : "O grafo não é bipartido.",
+    `--------------------------------------------------------------------------------------------`,
+
+    contemCaminhoFechado
+      ? "O grafo contém um caminho fechado."
+      : "O grafo não contém caminho fechado.",
     `--------------------------------------------------------------------------------------------`,
   ];
 
@@ -267,7 +275,43 @@ function buscaProfundidadeBipartido(grafo, nodo, color, c) {
   return true; // Se todos os vizinhos foram coloridos corretamente, retorna verdadeiro
 }
 
-// verificarCaminhoFechado ->
+// Função para verificar se existe um caminho fechado no grafo
+function verificarCaminhoFechado(grafo) {
+  const visitado = new Set(); // Conjunto para armazenar os vértices visitados
+
+  // Itera sobre todos os vértices do grafo
+  for (const nodo in grafo) {
+    if (!visitado.has(Number(nodo))) {
+      // Se o vértice não foi visitado, tenta encontrar um ciclo a partir dele
+      if (buscaCiclo(grafo, nodo, visitado, -1)) {
+        return true; // Se encontrar um ciclo, retorna true
+      }
+    }
+  }
+
+  return false; // Se nenhum ciclo for encontrado, retorna false
+}
+
+// Função auxiliar para realizar a busca em profundidade e verificar ciclos
+function buscaCiclo(grafo, nodo, visitado, anterior) {
+  visitado.add(nodo); // Marca o vértice atual como visitado
+
+  // Itera sobre todos os vizinhos do vértice atual
+  for (const vizinho of grafo[nodo]) {
+    // Verifica se o vizinho é o vértice anterior (para evitar retroceder no caminho)
+    if (vizinho !== anterior) {
+      if (visitado.has(vizinho)) {
+        return true; // Se o vizinho já foi visitado, um ciclo foi encontrado
+      }
+      // Caso contrário, continua a busca recursiva
+      if (buscaCiclo(grafo, vizinho, visitado, nodo)) {
+        return true;
+      }
+    }
+  }
+
+  return false; // Se nenhum ciclo for encontrado, retorna false
+}
 
 // Vincula a função de verificação ao botão da interface
 if (typeof document !== "undefined") {
