@@ -114,6 +114,13 @@ function verificarGrafo() {
   new vis.Network(container, data, options);
 }
 
+// Vincula a função de verificação ao botão da interface
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("button").addEventListener("click", verificarGrafo);
+  });
+}
+
 // Função para converter a entrada de texto em um array de arestas
 export function processarArestas(input) {
   try {
@@ -335,11 +342,4 @@ export function verificarEuleriano(grafo) {
   }
 
   return true; // Se todas as condições forem atendidas, o grafo é Euleriano
-}
-
-// Vincula a função de verificação ao botão da interface
-if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("button").addEventListener("click", verificarGrafo);
-  });
 }
