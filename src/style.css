@@ -7,6 +7,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  flex-direction: column; /* Alinha as seções verticalmente */
 }
 
 .container {
@@ -18,6 +19,7 @@ body {
   width: 90%;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 30px; /* Adiciona espaço entre as seções */
 }
 
 .container:hover {
