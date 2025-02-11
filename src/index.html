@@ -19,8 +19,7 @@
       </p>
 
       <input type="text" id="arestas" placeholder="Arestas do Grafo" />
-
-      <button>Verificar Grafo</button>
+      <button id="btnVerificar">Verificar Grafo</button>
 
       <div class="resultados-e-grafo">
         <div id="detalhesResultado" class="resultados">
@@ -31,6 +30,32 @@
         </div>
         <div id="visualizacaoGrafo" class="grafo">
           <!-- O grafo será renderizado aqui -->
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="container">
+      <h1>Verificação de Isomorfismo de Grafos</h1>
+      <p>
+        Insira as arestas dos dois grafos e clique no botão para verificar se
+        são isomorfos.
+      </p>
+
+      <input type="text" id="arestasGrafoA" placeholder="Arestas do Grafo A" />
+      <input type="text" id="arestasGrafoB" placeholder="Arestas do Grafo B" />
+      <button id="verificarIsomorfismo">Verificar Isomorfismo</button>
+
+      <div class="isomorfismo-resultados-e-grafos">
+        <div id="resultadoIsomorfismo" class="resultados">
+          <h2>Resultado da Verificação</h2>
+          <p id="resultadoTexto"></p>
+        </div>
+
+        <div class="visualizacao-grafos">
+          <div id="visualizacaoGrafoA" class="grafo"></div>
+          <div id="visualizacaoGrafoB" class="grafo"></div>
         </div>
       </div>
     </div>
