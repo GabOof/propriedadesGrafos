@@ -4,7 +4,7 @@ import {
   contarComponentesConexos,
 } from "../script";
 
-describe("Funções de Grafo -> Entrega 2", () => {
+describe("Funções de Grafo -> Entrega 3", () => {
   describe("verificarCaminhoFechado", () => {
     it("deve retornar true para um grafo com um caminho fechado", () => {
       const grafo = {
