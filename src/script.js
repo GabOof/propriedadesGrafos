@@ -447,11 +447,18 @@ function verificarIsomorfismoGrafos() {
   const arestasGrafoA = processarArestas(entradaGrafoA);
   const arestasGrafoB = processarArestas(entradaGrafoB);
 
-  // Verifica se a entrada dos grafos é válida
+  // Verifica se as entradas são válidas
   if (!arestasGrafoA || !arestasGrafoB) {
-    document.getElementById("resultadoTexto").textContent =
-      "Entrada inválida. Verifique as arestas.";
-    return;
+    const listaResultados = document.getElementById("resultadoTexto");
+    listaResultados.textContent = ""; // Limpa resultados anteriores
+
+    const erro = document.createElement("li");
+    erro.classList.add("erro");
+    erro.textContent =
+      "Entrada inválida. Por favor, forneça as arestas no formato correto (ex: [[1, 2], [1, 3]])";
+    listaResultados.appendChild(erro);
+
+    return; // Retorna para evitar continuar a execução
   }
 
   // Cria os grafos a partir das listas de arestas
