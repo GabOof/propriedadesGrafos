@@ -346,18 +346,12 @@ export function verificarEuleriano(grafo) {
 
 // Função para verificar isomorfismo entre dois grafos
 export function verificarIsomorfismo(grafoA, grafoB) {
-  console.log("Verificando isomorfismo entre os grafos...");
-
   // Obtém os vértices de cada grafo
   const verticesA = Object.keys(grafoA);
   const verticesB = Object.keys(grafoB);
 
-  console.log("Grafo A:", grafoA);
-  console.log("Grafo B:", grafoB);
-
   // Verifica se os grafos têm o mesmo número de vértices
   if (verticesA.length !== verticesB.length) {
-    console.log("Os grafos têm um número diferente de vértices.");
     return false;
   }
 
@@ -365,16 +359,12 @@ export function verificarIsomorfismo(grafoA, grafoB) {
   const grauA = verticesA.map((v) => grafoA[v].length);
   const grauB = verticesB.map((v) => grafoB[v].length);
 
-  console.log("Graus do Grafo A:", grauA);
-  console.log("Graus do Grafo B:", grauB);
-
   // Ordena os graus para permitir a comparação
   grauA.sort((a, b) => a - b);
   grauB.sort((a, b) => a - b);
 
   // Verifica se os graus dos vértices são idênticos em ambos os grafos
   if (!arraysIguais(grauA, grauB)) {
-    console.log("Os graus dos vértices não são iguais.");
     return false;
   }
 
@@ -399,7 +389,6 @@ function arraysIguais(arr1, arr2) {
 
 // Tenta encontrar uma correspondência válida entre os vértices dos grafos
 function encontrarCorrespondencias(grafoA, grafoB, correspondencias, verticeA) {
-  console.log(`Encontrando correspondências para o vértice: ${verticeA}`);
   const vizinhosA = grafoA[verticeA]; // Obtém os vizinhos do vérticeA no grafoA
   const vizinhosB = new Set(Object.keys(grafoB)); // Lista de possíveis mapeamentos no grafoB
 
@@ -413,17 +402,14 @@ function encontrarCorrespondencias(grafoA, grafoB, correspondencias, verticeA) {
   // Tenta mapear cada vértice de A para um vértice de B
   for (const vB of vizinhosB) {
     correspondencias[verticeA] = vB;
-    console.log(`Tentando mapear ${verticeA} para ${vB}`);
 
     // Verifica se a correspondência é válida
     if (verificarCorrespondencia(grafoA, grafoB, correspondencias)) {
-      console.log(`Correspondência válida encontrada: ${verticeA} -> ${vB}`);
       return true;
     }
 
     // Se a correspondência não for válida, desfaz o mapeamento
     delete correspondencias[verticeA];
-    console.log(`Removendo correspondência: ${verticeA} -> ${vB}`);
   }
 
   return false;
@@ -441,22 +427,15 @@ function verificarCorrespondencia(grafoA, grafoB, correspondencias) {
       .map((v) => correspondencias[v])
       .filter(Boolean);
 
-    console.log(`Verificando correspondência: ${vA} -> ${vB}`);
-    console.log("Vizinhos A:", vizinhosA);
-    console.log("Vizinhos B:", vizinhosB);
-    console.log("Correspondentes:", correspondentes);
-
     // Verifica se todos os vizinhos correspondentes estão nos vizinhos do grafo B
     if (
       !correspondentes.every((correspondente) =>
         vizinhosB.includes(correspondente)
       )
     ) {
-      console.log("Correspondência inválida.");
       return false;
     }
   }
-  console.log("Todas as correspondências são válidas.");
   return true;
 }
 
@@ -465,9 +444,6 @@ function verificarIsomorfismoGrafos() {
   const entradaGrafoA = document.getElementById("arestasGrafoA").value;
   const entradaGrafoB = document.getElementById("arestasGrafoB").value;
 
-  console.log("Entrada Grafo A:", entradaGrafoA);
-  console.log("Entrada Grafo B:", entradaGrafoB);
-
   const arestasGrafoA = processarArestas(entradaGrafoA);
   const arestasGrafoB = processarArestas(entradaGrafoB);
 
@@ -475,16 +451,12 @@ function verificarIsomorfismoGrafos() {
   if (!arestasGrafoA || !arestasGrafoB) {
     document.getElementById("resultadoTexto").textContent =
       "Entrada inválida. Verifique as arestas.";
-    console.log("Entrada inválida.");
     return;
   }
 
   // Cria os grafos a partir das listas de arestas
   const grafoA = criarGrafo(arestasGrafoA);
   const grafoB = criarGrafo(arestasGrafoB);
-
-  console.log("Grafo A criado:", grafoA);
-  console.log("Grafo B criado:", grafoB);
 
   // Verifica se os grafos são isomorfos
   const isomorfos = verificarIsomorfismo(grafoA, grafoB);
