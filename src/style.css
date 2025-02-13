@@ -147,3 +147,10 @@ li:hover {
   font-weight: bold;
   margin-top: 10px;
 }
+
+.visualizacao-grafos {
+  display: flex; /* Alinha os elementos lado a lado */
+  justify-content: space-between; /* Espaça os elementos igualmente */
+  gap: 20px; /* Espaço entre os elementos */
+  margin-top: 30px;
+}
