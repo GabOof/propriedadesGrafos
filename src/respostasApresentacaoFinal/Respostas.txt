@@ -1,0 +1,53 @@
+Respostas
+
+Isomorfo:
+
+1. False;
+2. True.
+
+Euleriano:
+
+1. False;
+2. False.
+
+Caminho fechado:
+
+1. True;
+2. False.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bipartido:
+
+1. True;
+2. False;
+3. True;
+4. False;
+5. False.
+
+Ciclo:
+
+1. True;
+2. False

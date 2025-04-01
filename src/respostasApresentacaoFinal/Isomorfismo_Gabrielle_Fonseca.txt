@@ -1,0 +1,150 @@
+Análise de complexidade da função isomorfismo:
+
+O algoritmo de isomorfismo de grafos tem a seguinte complexidade:
+
+- A primeira parte, que verifica os vértices e os graus dos grafos, tem uma complexidade de O(n log n), por causa da ordenação dos graus.
+- A parte que tenta encontrar correspondências entre os vértices é a mais cara, com uma complexidade de O(n!) no pior caso, porque ele tenta todas as permutações possíveis de vértices.
+- A verificação se os vizinhos correspondem tem complexidade O(n * d), onde d é o número de conexões (arestas) dos vértices.
+
+A complexidade mais pesada é O(n!), porque é a busca de força bruta, tentando todas as combinações de vértices.
+
+Resumindo:
+
+Complexidade O (pior caso): O(n!)
+Complexidade Θ (teta): O(n!)
+Ou seja, o algoritmo pode ser muito lento para grafos grandes.
+
+Trecho do código sobre isomorfismo (JavaScript):
+
+// Função para verificar isomorfismo entre dois grafos
+export function verificarIsomorfismo(grafoA, grafoB) {
+  // Obtém os vértices de cada grafo
+  const verticesA = Object.keys(grafoA);
+  const verticesB = Object.keys(grafoB);
+
+  // Verifica se os grafos têm o mesmo número de vértices
+  if (verticesA.length !== verticesB.length) {
+    return false;
+  }
+
+  // Calcula os graus (quantidade de arestas) de cada vértice nos dois grafos
+  const grauA = verticesA.map((v) => grafoA[v].length);
+  const grauB = verticesB.map((v) => grafoB[v].length);
+
+  // Ordena os graus para permitir a comparação
+  grauA.sort((a, b) => a - b);
+  grauB.sort((a, b) => a - b);
+
+  // Verifica se os graus dos vértices são idênticos em ambos os grafos
+  if (!arraysIguais(grauA, grauB)) {
+    return false;
+  }
+
+  // Inicializa um objeto para armazenar a correspondência entre os vértices dos grafos
+  const correspondencias = {};
+  return encontrarCorrespondencias(
+    grafoA,
+    grafoB,
+    correspondencias,
+    verticesA[0]
+  );
+}
+
+// Função auxiliar para verificar se dois arrays são iguais
+function arraysIguais(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
+// Tenta encontrar uma correspondência válida entre os vértices dos grafos
+function encontrarCorrespondencias(grafoA, grafoB, correspondencias, verticeA) {
+  const vizinhosA = grafoA[verticeA]; // Obtém os vizinhos do vérticeA no grafoA
+  const vizinhosB = new Set(Object.keys(grafoB)); // Lista de possíveis mapeamentos no grafoB
+
+  // Remove da lista os vértices que já possuem correspondência
+  for (const vA of vizinhosA) {
+    if (correspondencias[vA]) {
+      vizinhosB.delete(correspondencias[vA]);
+    }
+  }
+
+  // Tenta mapear cada vértice de A para um vértice de B
+  for (const vB of vizinhosB) {
+    correspondencias[verticeA] = vB;
+
+    // Verifica se a correspondência é válida
+    if (verificarCorrespondencia(grafoA, grafoB, correspondencias)) {
+      return true;
+    }
+
+    // Se a correspondência não for válida, desfaz o mapeamento
+    delete correspondencias[verticeA];
+  }
+
+  return false;
+}
+
+// Verifica se a correspondência entre os vértices mantém a estrutura dos grafos
+function verificarCorrespondencia(grafoA, grafoB, correspondencias) {
+  for (const vA in correspondencias) {
+    const vB = correspondencias[vA]; // Vértice correspondente no grafo B
+    const vizinhosA = grafoA[vA]; // Vizinhos no grafo A
+    const vizinhosB = grafoB[vB]; // Vizinhos no grafo B
+
+    // Converte os vizinhos de A para seus correspondentes em B
+    const correspondentes = vizinhosA
+      .map((v) => correspondencias[v])
+      .filter(Boolean);
+
+    // Verifica se todos os vizinhos correspondentes estão nos vizinhos do grafo B
+    if (
+      !correspondentes.every((correspondente) =>
+        vizinhosB.includes(correspondente)
+      )
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Função principal para processar a entrada e iniciar a verificação do isomorfismo
+function verificarIsomorfismoGrafos() {
+  const entradaGrafoA = document.getElementById("arestasGrafoA").value;
+  const entradaGrafoB = document.getElementById("arestasGrafoB").value;
+
+  const arestasGrafoA = processarArestas(entradaGrafoA);
+  const arestasGrafoB = processarArestas(entradaGrafoB);
+
+  // Verifica se as entradas são válidas
+  if (!arestasGrafoA || !arestasGrafoB) {
+    const listaResultados = document.getElementById("resultadoTexto");
+    listaResultados.textContent = ""; // Limpa resultados anteriores
+
+    const erro = document.createElement("li");
+    erro.classList.add("erro");
+    erro.textContent =
+      "Entrada inválida. Por favor, forneça as arestas no formato correto (ex: [[1, 2], [1, 3]])";
+    listaResultados.appendChild(erro);
+
+    return; // Retorna para evitar continuar a execução
+  }
+
+  // Cria os grafos a partir das listas de arestas
+  const grafoA = criarGrafo(arestasGrafoA);
+  const grafoB = criarGrafo(arestasGrafoB);
+
+  // Verifica se os grafos são isomorfos
+  const isomorfos = verificarIsomorfismo(grafoA, grafoB);
+
+  document.getElementById("resultadoTexto").textContent = isomorfos
+    ? "Os grafos são isomorfos."
+    : "Os grafos não são isomorfos.";
+
+  // Exibe a visualização dos grafos na interface
+  visualizarGrafo(grafoA, "visualizacaoGrafoA");
+  visualizarGrafo(grafoB, "visualizacaoGrafoB");
+}
